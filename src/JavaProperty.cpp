@@ -11,6 +11,20 @@ namespace Kophi {
         return JavaConstantUtf8::cast(parent.pool[descriptorIndex])->text;
     }
 
+    JavaAttribute JavaProperty::searchAttributes(const std::string &name) const {
+        for (const JavaAttribute &attribute : attributes) {
+            if (attribute->name == name) {
+                return attribute;
+            }
+        }
+
+        return JavaAttribute(nullptr);
+    }
+
+    JavaAttributeCode* JavaProperty::getCode() const {
+        return JavaAttributeCode::cast(searchAttributes("Code"));
+    }
+
     JavaProperty::JavaProperty(const JavaClass &parent, const unsigned char *data, unsigned int &index)
     : parent(parent) {
         unsigned m = 0;

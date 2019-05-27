@@ -22,7 +22,9 @@ namespace Kophi {
         std::string getName() const;
         std::string getDescriptor() const;
 
-        // TODO: for searching attributes
+        JavaAttributeCode *getCode() const;
+
+        JavaAttribute searchAttributes(const std::string &name) const;
 
         explicit JavaProperty(const JavaClass &parent, const unsigned char *data, unsigned &index);
     };

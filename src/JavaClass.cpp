@@ -88,6 +88,44 @@ namespace Kophi {
     const JavaConstantClass *JavaClass::getThisClass() const { return JavaConstantClass::cast(pool[thisClass]); }
     const JavaConstantClass *JavaClass::getSuperClass() const { return JavaConstantClass::cast(pool[superClass]); }
 
+    const JavaAttribute JavaClass::searchAttributes(const std::string& name) const {
+        for (const JavaAttribute &attribute : attributes) {
+            if (attribute->name == name) {
+                return attribute;
+            }
+        }
+
+        return JavaAttribute(nullptr);
+    }
+
+    const std::vector<JavaConstant> JavaClass::searchConstants(JavaConstantTag tag) const {
+        std::vector<JavaConstant> constants;
+
+        for (const JavaConstant &constant : pool) {
+            if (constant->tag == tag) {
+                constants.push_back(constant);
+            }
+        }
+
+        return constants;
+    }
+
+    const std::vector<std::string> JavaClass::getDependancies() const {
+        std::vector<JavaConstant> constants = searchConstants(JavaConstantTag::Class);
+        std::vector<std::string> names;
+        names.reserve(constants.size());
+
+        for (const JavaConstant &constant : constants) {
+            names.push_back(JavaConstantClass::cast(constant)->getName());
+        }
+
+        return names;
+    }
+
+    const std::string JavaClass::getSourceFileName() const {
+        return JavaAttributeSourceFile::cast(searchAttributes("SourceFile"))->getSourceFileName();
+    }
+
     JavaClass::JavaClass(const std::vector<unsigned char> &data) {
         unsigned index = 0;
         magic = Private::swapEndian(*(uint32_t *) &data[index]);

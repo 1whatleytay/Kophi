@@ -34,6 +34,12 @@ namespace Kophi {
         const JavaConstantClass *getThisClass() const;
         const JavaConstantClass *getSuperClass() const;
 
+        const JavaAttribute searchAttributes(const std::string &name) const;
+        const std::vector<JavaConstant> searchConstants(JavaConstantTag tag) const;
+
+        const std::string getSourceFileName() const;
+        const std::vector<std::string> getDependancies() const;
+
         explicit JavaClass(const std::vector<unsigned char> &data);
         explicit JavaClass(const std::string &path);
     };
