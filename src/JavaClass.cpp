@@ -30,17 +30,17 @@ namespace Kophi {
                                << "]: " << JavaConstantString::cast(info)->getText();
                     break;
                 case JavaConstantTag::FieldRef:
-                    stream << "Field Ref: " << JavaConstantRef::cast(info)->getNameAndType()->getDescription()
+                    stream << "Field Ref: " << JavaConstantRef::cast(info)->getNameAndType()->getDescriptor()
                                << " " << JavaConstantRef::cast(info)->getClass()->getName()
                                << "#" << JavaConstantRef::cast(info)->getNameAndType()->getName();
                     break;
                 case JavaConstantTag::MethodRef:
-                    stream << "Method Ref: " << JavaConstantRef::cast(info)->getNameAndType()->getDescription()
+                    stream << "Method Ref: " << JavaConstantRef::cast(info)->getNameAndType()->getDescriptor()
                                << " " << JavaConstantRef::cast(info)->getClass()->getName()
                                << "#" << JavaConstantRef::cast(info)->getNameAndType()->getName();
                     break;
                 case JavaConstantTag::NameAndType:
-                    stream << "Name And Type: " << JavaConstantNameAndType::cast(info)->getDescription()
+                    stream << "Name And Type: " << JavaConstantNameAndType::cast(info)->getDescriptor()
                                << " " << JavaConstantNameAndType::cast(info)->getName();
                     break;
                 default:

@@ -76,7 +76,7 @@ namespace Kophi {
         uint16_t descriptorIndex;
 
         std::string getName() const;
-        std::string getDescription() const;
+        std::string getDescriptor() const;
 
         JavaConstantNameAndType(const JavaClass &parent, const Byte *data, unsigned &index);
 

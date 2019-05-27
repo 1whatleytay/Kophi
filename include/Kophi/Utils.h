@@ -78,6 +78,7 @@ namespace Kophi {
         Package            = 20,
     };
 
+    bool hasAccessFlag(AccessFlags flags, AccessFlags check);
     std::string describeAccessFlags(AccessFlags flags);
 
     class ConstantCastException : std::exception {

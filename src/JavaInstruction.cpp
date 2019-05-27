@@ -222,8 +222,9 @@ namespace Kophi {
             for (int a = 1; a < info.length; a++) {
                 stream << " " << (unsigned) data[index + a];
             }
-            stream << "\n";
             index += info.length;
+            if (index < length)
+                stream << "\n";
         }
 
         return stream.str();

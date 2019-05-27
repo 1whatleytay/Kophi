@@ -53,7 +53,7 @@ namespace Kophi {
         return ((JavaConstantUtf8 *)parent.pool[nameIndex].get())->text;
     }
 
-    std::string JavaConstantNameAndType::getDescription() const {
+    std::string JavaConstantNameAndType::getDescriptor() const {
         return ((JavaConstantUtf8 *)parent.pool[descriptorIndex].get())->text;
     }
 

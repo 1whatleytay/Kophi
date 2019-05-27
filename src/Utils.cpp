@@ -3,8 +3,8 @@
 #include <Kophi/Utils.h>
 
 namespace Kophi {
-    constexpr bool hasAccessFlag(AccessFlags flag, AccessFlags check) {
-        return (uint16_t)flag & (uint16_t)check;
+    bool hasAccessFlag(AccessFlags flags, AccessFlags check) {
+        return (uint16_t)flags & (uint16_t)check;
     }
 
     std::string describeAccessFlags(AccessFlags flags) {
