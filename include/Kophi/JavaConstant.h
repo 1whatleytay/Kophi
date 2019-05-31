@@ -17,6 +17,7 @@ namespace Kophi {
 
         JavaConstantTag tag = JavaConstantTag::Unknown;
 
+        virtual std::string toString() const = 0;
         virtual ~JavaConstantType() = default;
 
         static std::shared_ptr<JavaConstantType> build(const JavaClass &parent,
@@ -30,6 +31,8 @@ namespace Kophi {
 
         JavaInt value;
 
+        std::string toString() const override;
+
         JavaConstantInteger(const JavaClass &parent, const Byte *data, unsigned &index);
 
         static JavaConstantInteger *cast(const JavaConstant &constant);
@@ -40,6 +43,8 @@ namespace Kophi {
         const static unsigned size = sizeof(JavaFloat);
 
         JavaFloat value;
+
+        std::string toString() const override;
 
         JavaConstantFloat(const JavaClass &parent, const Byte *data, unsigned &index);
 
@@ -52,6 +57,8 @@ namespace Kophi {
 
         JavaLong value;
 
+        std::string toString() const override;
+
         JavaConstantLong(const JavaClass &parent, const Byte *data, unsigned &index);
 
         static JavaConstantLong *cast(const JavaConstant &constant);
@@ -62,6 +69,8 @@ namespace Kophi {
         const static unsigned size = sizeof(JavaDouble);
 
         JavaDouble value;
+
+        std::string toString() const override;
 
         JavaConstantDouble(const JavaClass &parent, const Byte *data, unsigned &index);
 
@@ -78,6 +87,8 @@ namespace Kophi {
         std::string getName() const;
         std::string getDescriptor() const;
 
+        std::string toString() const override;
+
         JavaConstantNameAndType(const JavaClass &parent, const Byte *data, unsigned &index);
 
         static JavaConstantNameAndType *cast(const JavaConstant &constant);
@@ -90,6 +101,8 @@ namespace Kophi {
         uint16_t stringIndex;
 
         std::string getText() const;
+
+        std::string toString() const override;
 
         JavaConstantString(const JavaClass &parent, const Byte *data, unsigned &index);
 
@@ -104,6 +117,8 @@ namespace Kophi {
 
         std::string getName() const;
 
+        std::string toString() const override;
+
         JavaConstantClass(const JavaClass &parent, const Byte *data, unsigned &index);
 
         static JavaConstantClass *cast(const JavaConstant &constant);
@@ -115,6 +130,8 @@ namespace Kophi {
 
         uint16_t length;
         std::string text;
+
+        std::string toString() const override;
 
         JavaConstantUtf8(const JavaClass &parent, const Byte *data, unsigned &index);
 
@@ -130,6 +147,8 @@ namespace Kophi {
 
         const JavaConstantClass *getClass() const;
         const JavaConstantNameAndType *getNameAndType() const;
+
+        std::string toString() const override;
 
         JavaConstantRef(const JavaClass &parent, const Byte *data, unsigned &index);
 
@@ -148,6 +167,8 @@ namespace Kophi {
 
         JavaConstantRef *getReference() const;
 
+        std::string toString() const override;
+
         JavaConstantMethodHandle(const JavaClass &parent, const Byte *data, unsigned &index);
 
         JavaConstantMethodHandle *cast(const JavaConstant &constant);
@@ -160,6 +181,8 @@ namespace Kophi {
         PoolIndex descriptorIndex;
 
         std::string getDescriptor() const;
+
+        std::string toString() const override;
 
         JavaConstantMethodType(const JavaClass &parent, const Byte *data, unsigned &index);
 
@@ -175,6 +198,8 @@ namespace Kophi {
 
         JavaConstantNameAndType *getNameAndType() const;
 
+        std::string toString() const override;
+
         JavaConstantDynamic(const JavaClass &parent, const Byte *data, unsigned &index);
 
         JavaConstantDynamic *cast(const JavaConstant &constant);
@@ -188,6 +213,8 @@ namespace Kophi {
         PoolIndex nameIndex;
 
         std::string getName() const;
+
+        std::string toString() const override;
 
         JavaConstantModule(const JavaClass &parent, const Byte *data, unsigned &index);
 

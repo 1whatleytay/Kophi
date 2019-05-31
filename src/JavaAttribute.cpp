@@ -33,7 +33,7 @@ namespace Kophi {
     }
 
     std::string JavaAttributeCode::getDisassembly() const {
-        return createDisasm(&code[0], codeLength);
+        return createDisasm(parent, &code[0], codeLength);
     }
 
     std::string JavaAttributeCode::toString() const {

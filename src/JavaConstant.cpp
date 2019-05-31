@@ -3,6 +3,10 @@
 #include <Kophi/JavaConstant.h>
 
 namespace Kophi {
+    std::string JavaConstantInteger::toString() const {
+        return "Integer " + std::to_string(value);
+    }
+
     JavaConstantInteger::JavaConstantInteger(const JavaClass &parent,
             const Byte *data, unsigned &index) : JavaConstantType(parent, data, index) {
         value = Private::swapEndian(*(JavaInt *)&data[headerSize]);
@@ -12,6 +16,10 @@ namespace Kophi {
         if (constant->tag != JavaConstantTag::Integer)
             throw ConstantCastException(constant->tag, JavaConstantTag::Integer);
         return (JavaConstantInteger *)constant.get();
+    }
+
+    std::string JavaConstantFloat::toString() const {
+        return "Float " + std::to_string(value);
     }
     
     JavaConstantFloat::JavaConstantFloat(const JavaClass &parent,
@@ -25,7 +33,11 @@ namespace Kophi {
             throw ConstantCastException(constant->tag, JavaConstantTag::Float);
         return (JavaConstantFloat *)constant.get();
     }
-    
+
+    std::string JavaConstantLong::toString() const {
+        return "Long " + std::to_string(value);
+    }
+
     JavaConstantLong::JavaConstantLong(const JavaClass &parent,
             const Byte *data, unsigned &index) : JavaConstantType(parent, data, index) {
         value = Private::swapEndian(*(JavaLong *)&data[headerSize]);
@@ -35,6 +47,10 @@ namespace Kophi {
         if (constant->tag != JavaConstantTag::Long)
             throw ConstantCastException(constant->tag, JavaConstantTag::Long);
         return (JavaConstantLong *)constant.get();
+    }
+
+    std::string JavaConstantDouble::toString() const {
+        return "Double " + std::to_string(value);
     }
 
     JavaConstantDouble::JavaConstantDouble(const JavaClass &parent,
@@ -57,6 +73,10 @@ namespace Kophi {
         return ((JavaConstantUtf8 *)parent.pool[descriptorIndex].get())->text;
     }
 
+    std::string JavaConstantNameAndType::toString() const {
+        return "Name and Type " + getDescriptor() + getName();
+    }
+
     JavaConstantNameAndType::JavaConstantNameAndType(const JavaClass &parent,
             const Byte *data, unsigned &index) : JavaConstantType(parent, data, index) {
         nameIndex = Private::swapEndian(*(uint16_t *)&data[headerSize]);
@@ -71,6 +91,10 @@ namespace Kophi {
 
     std::string JavaConstantString::getText() const {
         return ((JavaConstantUtf8 *)parent.pool[stringIndex].get())->text;
+    }
+
+    std::string JavaConstantString::toString() const {
+        return "String " + getText();
     }
 
     JavaConstantString::JavaConstantString(const JavaClass &parent,
@@ -88,6 +112,10 @@ namespace Kophi {
         return ((JavaConstantUtf8 *)parent.pool[nameIndex].get())->text;
     }
 
+    std::string JavaConstantClass::toString() const {
+        return "Class " + getName();
+    }
+
     JavaConstantClass::JavaConstantClass(const JavaClass &parent,
             const Byte *data, unsigned &index) : JavaConstantType(parent, data, index) {
         nameIndex = Private::swapEndian(*(uint16_t *)&data[headerSize]);
@@ -97,6 +125,10 @@ namespace Kophi {
         if (constant->tag != JavaConstantTag::Class)
             throw ConstantCastException(constant->tag, JavaConstantTag::Class);
         return (JavaConstantClass *)constant.get();
+    }
+
+    std::string JavaConstantUtf8::toString() const {
+        return "Utf8 " + text;
     }
 
     JavaConstantUtf8::JavaConstantUtf8(const JavaClass &parent,
@@ -120,6 +152,11 @@ namespace Kophi {
         return (JavaConstantNameAndType *)parent.pool[nameAndTypeIndex].get();
     }
 
+    std::string JavaConstantRef::toString() const {
+        return "Reference " + getNameAndType()->getDescriptor() + " "
+            + getClass()->getName() + "#" + getNameAndType()->getName();
+    }
+
     JavaConstantRef::JavaConstantRef(const JavaClass &parent,
             const Byte *data, unsigned &index) : JavaConstantType(parent, data, index) {
         classIndex = Private::swapEndian(*(uint16_t *)&data[headerSize]);
@@ -138,6 +175,12 @@ namespace Kophi {
         return JavaConstantRef::cast(parent.pool[referenceIndex]);
     }
 
+    std::string JavaConstantMethodHandle::toString() const {
+        return "Method Handle " + getReference()->getNameAndType()->getDescriptor() + " "
+            + getReference()->getClass()->getName() + "#"
+            + getReference()->getNameAndType()->getName();
+    }
+
     JavaConstantMethodHandle::JavaConstantMethodHandle(const JavaClass &parent,
             const Byte *data, unsigned &index) : JavaConstantType(parent, data, index) {
         referenceKind = (ReferenceKind)data[headerSize];
@@ -152,6 +195,10 @@ namespace Kophi {
 
     std::string JavaConstantMethodType::getDescriptor() const {
         return JavaConstantUtf8::cast(parent.pool[descriptorIndex])->text;
+    }
+
+    std::string JavaConstantMethodType::toString() const {
+        return "Method Type " + getDescriptor();
     }
 
     JavaConstantMethodType::JavaConstantMethodType(const JavaClass &parent,
@@ -169,6 +216,10 @@ namespace Kophi {
         return JavaConstantNameAndType::cast(parent.pool[nameAndTypeIndex]);
     }
 
+    std::string JavaConstantDynamic::toString() const {
+        return "Dynamic " + getNameAndType()->getDescriptor() + " " + getNameAndType()->getName();
+    }
+
     JavaConstantDynamic::JavaConstantDynamic(const JavaClass &parent,
             const Byte *data, unsigned &index) : JavaConstantType(parent, data, index) {
         bootstrapMethodIndex = Private::swapEndian(*(uint16_t *)&data[headerSize]);
@@ -180,6 +231,14 @@ namespace Kophi {
             && constant->tag != JavaConstantTag::InvokeDynamic)
             throw ConstantCastException(constant->tag, JavaConstantTag::Dynamic);
         return (JavaConstantDynamic *)constant.get();
+    }
+
+    std::string JavaConstantModule::toString() const {
+        return "Module " + getName();
+    }
+
+    std::string JavaConstantModule::getName() const {
+        return JavaConstantUtf8::cast(parent.pool[nameIndex])->text;
     }
 
     JavaConstantModule::JavaConstantModule(const JavaClass &parent,

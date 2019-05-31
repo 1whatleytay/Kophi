@@ -4,6 +4,8 @@
 #include <Kophi/Utils.h>
 
 namespace Kophi {
+    class JavaClass;
+
     enum class JavaInstruction : uint8_t {
         Nop = 0x0,
         AConst_Null = 0x1,
@@ -208,14 +210,21 @@ namespace Kophi {
         Jsr_w = 0xc9,
     };
 
+    enum class JavaInstructionParameters {
+        Numbers,
+        Short,
+        Indexed,
+    };
+
     class JavaInstructionInfo {
     public:
         JavaInstruction code;
         std::string name;
         unsigned length;
+        JavaInstructionParameters parameters;
     };
 
-    std::string createDisasm(const unsigned char *data, unsigned length);
+    std::string createDisasm(const JavaClass &java, const unsigned char *data, unsigned length);
 
     const JavaInstructionInfo &lookupInstruction(JavaInstruction inst);
 }
