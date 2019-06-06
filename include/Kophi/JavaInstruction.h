@@ -196,16 +196,17 @@ namespace Kophi {
         InvokeDynamic = 0xba,
         New = 0xbb,
         NewArray = 0xbc,
+        ANewArray = 0xbd,
         ArrayLength = 0xbe,
-        Athrow = 0xbf,
+        AThrow = 0xbf,
         CheckCast = 0xc0,
-        Instanceof = 0xc1,
-        Monitorenter = 0xc2,
-        Monitorexit = 0xc3,
+        InstanceOf = 0xc1,
+        MonitorEnter = 0xc2,
+        MonitorExit = 0xc3,
         Wide = 0xc4,
-        Multianewarray = 0xc5,
-        Ifnull = 0xc6,
-        Ifnonnull = 0xc7,
+        MultiANewArray = 0xc5,
+        IfNull = 0xc6,
+        IfNonNull = 0xc7,
         Goto_w = 0xc8,
         Jsr_w = 0xc9,
     };
@@ -224,7 +225,7 @@ namespace Kophi {
         JavaInstructionParameters parameters;
     };
 
-    std::string createDisasm(const JavaClass &java, const unsigned char *data, unsigned length);
+    std::string createDisasm(const JavaClass &java, const unsigned char *data, unsigned length, unsigned pc = 0);
 
     const JavaInstructionInfo &lookupInstruction(JavaInstruction inst);
 }

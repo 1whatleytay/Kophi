@@ -7,7 +7,7 @@
 namespace Kophi {
     static const JavaInstructionInfo instructionInfo[] = {
             { JavaInstruction::Nop,             "Nop",             1, JavaInstructionParameters::Numbers },
-            { JavaInstruction::AConst_Null,     "Aconst_Null",     1, JavaInstructionParameters::Numbers },
+            { JavaInstruction::AConst_Null,     "AConst_Null",     1, JavaInstructionParameters::Numbers },
             { JavaInstruction::IConst_m1,       "IConst_m1",       1, JavaInstructionParameters::Numbers },
             { JavaInstruction::IConst_0,        "IConst_0",        1, JavaInstructionParameters::Numbers },
             { JavaInstruction::IConst_1,        "IConst_1",        1, JavaInstructionParameters::Numbers },
@@ -173,7 +173,7 @@ namespace Kophi {
             { JavaInstruction::If_icmple,       "If_icmple",       3, JavaInstructionParameters::Short   },
             { JavaInstruction::If_acmpeq,       "If_acmpeq",       3, JavaInstructionParameters::Short   },
             { JavaInstruction::If_acmpne,       "If_acmpne",       3, JavaInstructionParameters::Short   },
-            { JavaInstruction::Goto,            "Goto",            3, JavaInstructionParameters::Numbers },
+            { JavaInstruction::Goto,            "Goto",            3, JavaInstructionParameters::Short },
             { JavaInstruction::Jsr,             "Jsr",             5, JavaInstructionParameters::Numbers },
             { JavaInstruction::Ret,             "Ret",             2, JavaInstructionParameters::Numbers },
             { JavaInstruction::TableSwitch,     "TableSwitch",     0, JavaInstructionParameters::Numbers },
@@ -195,16 +195,17 @@ namespace Kophi {
             { JavaInstruction::InvokeDynamic,   "InvokeDynamic",   3, JavaInstructionParameters::Indexed },
             { JavaInstruction::New,             "New",             3, JavaInstructionParameters::Indexed },
             { JavaInstruction::NewArray,        "NewArray",        2, JavaInstructionParameters::Numbers },
+            { JavaInstruction::ANewArray,       "ANewArray",       3, JavaInstructionParameters::Indexed },
             { JavaInstruction::ArrayLength,     "ArrayLength",     1, JavaInstructionParameters::Numbers },
-            { JavaInstruction::Athrow,          "Athrow",          1, JavaInstructionParameters::Numbers },
+            { JavaInstruction::AThrow,          "AThrow",          1, JavaInstructionParameters::Numbers },
             { JavaInstruction::CheckCast,       "CheckCast",       3, JavaInstructionParameters::Numbers },
-            { JavaInstruction::Instanceof,      "Instanceof",      3, JavaInstructionParameters::Numbers },
-            { JavaInstruction::Monitorenter,    "Monitorenter",    1, JavaInstructionParameters::Numbers },
-            { JavaInstruction::Monitorexit,     "Monitorexit",     1, JavaInstructionParameters::Numbers },
+            { JavaInstruction::InstanceOf,      "InstanceOf",      3, JavaInstructionParameters::Numbers },
+            { JavaInstruction::MonitorEnter,    "MonitorEnter",    1, JavaInstructionParameters::Numbers },
+            { JavaInstruction::MonitorExit,     "MonitorExit",     1, JavaInstructionParameters::Numbers },
             { JavaInstruction::Wide,            "Wide",            4, JavaInstructionParameters::Numbers },
-            { JavaInstruction::Multianewarray,  "Multianewarray",  4, JavaInstructionParameters::Numbers },
-            { JavaInstruction::Ifnull,          "Ifnull",          3, JavaInstructionParameters::Numbers },
-            { JavaInstruction::Ifnonnull,       "Ifnonnull",       3, JavaInstructionParameters::Numbers },
+            { JavaInstruction::MultiANewArray,  "MultiANewArray",  4, JavaInstructionParameters::Numbers },
+            { JavaInstruction::IfNull,          "IfNull",          3, JavaInstructionParameters::Numbers },
+            { JavaInstruction::IfNonNull,       "IfNonNull",       3, JavaInstructionParameters::Numbers },
             { JavaInstruction::Goto_w,          "Goto_w",          5, JavaInstructionParameters::Numbers },
             { JavaInstruction::Jsr_w,           "Jsr_w",           5, JavaInstructionParameters::Numbers },
     };
@@ -213,14 +214,14 @@ namespace Kophi {
         return instructionInfo[(uint8_t)inst];
     }
 
-    std::string createDisasm(const JavaClass &java, const unsigned char *data, unsigned length) {
+    std::string createDisasm(const JavaClass &java, const unsigned char *data, unsigned length, unsigned pc) {
         unsigned index = 0;
         std::stringstream stream;
 
         while (index < length) {
             JavaInstruction inst = (JavaInstruction) data[index];
             const JavaInstructionInfo &info = lookupInstruction(inst);
-            stream << "\t\t\t" << index << ": " << info.name;
+            stream << "\t\t\t" << (pc + index) << ": " << info.name;
             switch (info.parameters) {
                 case JavaInstructionParameters::Numbers:
                     for (int a = 1; a < info.length; a++) {
@@ -239,7 +240,7 @@ namespace Kophi {
                     break;
                 }
                 case JavaInstructionParameters::Short: {
-                    stream << " " << ((data[index + 1] << 8) | data[index + 2]);
+                    stream << " " << (short)((data[index + 1] << 8) | data[index + 2]);
                 }
             }
             index += info.length;
