@@ -295,16 +295,22 @@ namespace Kophi {
     }
 
     std::shared_ptr<JavaConstantType> JavaConstantType::build(const JavaClass &parent,
-            const Byte *data, unsigned &index) {
+            const Byte *data, unsigned &index, bool &isDouble) {
         JavaConstantTag tag = (JavaConstantTag) *(uint8_t *)&data[0];
+        isDouble = false;
         switch (tag) {
+            case JavaConstantTag::Unknown:
+                Private::log("Unknown Constant Tag Detected.");
+                return nullptr;
             case JavaConstantTag::Integer:
                 return JavaConstant(new JavaConstantInteger(parent, data, index));
             case JavaConstantTag::Float:
                 return JavaConstant(new JavaConstantFloat(parent, data, index));
             case JavaConstantTag::Long:
+                isDouble = true;
                 return JavaConstant(new JavaConstantLong(parent, data, index));
             case JavaConstantTag::Double:
+                isDouble = true;
                 return JavaConstant(new JavaConstantDouble(parent, data, index));
             case JavaConstantTag::NameAndType:
                 return JavaConstant(new JavaConstantNameAndType(parent, data, index));

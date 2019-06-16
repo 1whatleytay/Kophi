@@ -10,6 +10,17 @@
 namespace Kophi {
     constexpr uint32_t JAVA_CLASS_MAGIC = 0xCAFEBABE;
 
+    class JavaPool {
+        std::vector<JavaConstant> pool;
+    public:
+        unsigned size() const;
+        JavaConstant operator[](unsigned index) const;
+
+        JavaPool(const JavaClass &java, unsigned size, const Byte *data, unsigned &index);
+        JavaPool(const JavaPool &pool);
+        JavaPool() = default;
+    };
+
     class JavaClass {
     public:
         uint32_t magic = 0;
@@ -23,13 +34,11 @@ namespace Kophi {
         uint16_t fieldCount = 0;
         uint16_t methodCount = 0;
         uint16_t attributeCount = 0;
-        std::vector <JavaConstant> pool;
+        JavaPool pool;
         std::vector <uint16_t> interfaces;
         std::vector <JavaField> fields;
         std::vector <JavaMethod> methods;
         std::vector <JavaAttribute> attributes;
-
-        // TODO: make verify method
 
         const JavaConstantClass *getThisClass() const;
         const JavaConstantClass *getSuperClass() const;
@@ -40,8 +49,10 @@ namespace Kophi {
         const std::string getSourceFileName() const;
         const std::vector<std::string> getDependancies() const;
 
-        explicit JavaClass(const std::vector<unsigned char> &data);
-        explicit JavaClass(const std::string &path);
+        JavaClass(const std::vector<Byte> &data);
+        JavaClass(const std::string &path);
+        JavaClass(const JavaClass &java);
+        JavaClass() = default;
     };
 
     std::string describeClass(const JavaClass &java);

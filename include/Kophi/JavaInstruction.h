@@ -215,6 +215,7 @@ namespace Kophi {
         Numbers,
         Short,
         Indexed,
+        Switch,
     };
 
     class JavaInstructionInfo {

@@ -176,7 +176,7 @@ namespace Kophi {
             { JavaInstruction::Goto,            "Goto",            3, JavaInstructionParameters::Short },
             { JavaInstruction::Jsr,             "Jsr",             5, JavaInstructionParameters::Numbers },
             { JavaInstruction::Ret,             "Ret",             2, JavaInstructionParameters::Numbers },
-            { JavaInstruction::TableSwitch,     "TableSwitch",     0, JavaInstructionParameters::Numbers },
+            { JavaInstruction::TableSwitch,     "TableSwitch",     0, JavaInstructionParameters::Switch },
             { JavaInstruction::LookupSwitch,    "LookupSwitch",    0, JavaInstructionParameters::Numbers },
             { JavaInstruction::IReturn,         "IReturn",         1, JavaInstructionParameters::Numbers },
             { JavaInstruction::LReturn,         "LReturn",         1, JavaInstructionParameters::Numbers },
@@ -241,8 +241,20 @@ namespace Kophi {
                 }
                 case JavaInstructionParameters::Short: {
                     stream << " " << (short)((data[index + 1] << 8) | data[index + 2]);
+                    break;
+                }
+                case JavaInstructionParameters::Switch: {
+                    while (index % 4 != 0) { index++; }
+                    int defaultCase = *(uint32_t *)&data[index]; index += 4;
+                    int lowCase = *(uint32_t *)&data[index]; index += 4;
+                    int highCase = *(uint32_t *)&data[index]; index += 4;
+                    int offsetCount = highCase - lowCase + 1;
+                    index += offsetCount * 4;
+                    stream << " default: " << defaultCase << " low: " << lowCase << " high: " << highCase;
+                    break;
                 }
             }
+
             index += info.length;
             if (index < length)
                 stream << "\n";

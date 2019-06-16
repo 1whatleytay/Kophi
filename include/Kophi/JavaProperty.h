@@ -9,7 +9,7 @@
 namespace Kophi {
     class JavaClass;
 
-    class JavaProperty {
+    class JavaPropertyType {
     public:
         const JavaClass &parent;
 
@@ -26,8 +26,9 @@ namespace Kophi {
 
         JavaAttribute searchAttributes(const std::string &name) const;
 
-        explicit JavaProperty(const JavaClass &parent, const unsigned char *data, unsigned &index);
+        explicit JavaPropertyType(const JavaClass &parent, const unsigned char *data, unsigned &index);
     };
+    typedef std::shared_ptr<JavaPropertyType> JavaProperty;
 
     typedef JavaProperty JavaMethod;
     typedef JavaProperty JavaField;

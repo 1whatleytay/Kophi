@@ -21,7 +21,7 @@ namespace Kophi {
         virtual ~JavaConstantType() = default;
 
         static std::shared_ptr<JavaConstantType> build(const JavaClass &parent,
-                const Byte *data, unsigned &index);
+                const Byte *data, unsigned &index, bool &isDouble);
     };
     typedef std::shared_ptr<JavaConstantType> JavaConstant;
 

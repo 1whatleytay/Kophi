@@ -3,15 +3,15 @@
 #include <Kophi/JavaProperty.h>
 
 namespace Kophi {
-    std::string JavaProperty::getName() const {
+    std::string JavaPropertyType::getName() const {
         return JavaConstantUtf8::cast(parent.pool[nameIndex])->text;
     }
 
-    std::string JavaProperty::getDescriptor() const {
+    std::string JavaPropertyType::getDescriptor() const {
         return JavaConstantUtf8::cast(parent.pool[descriptorIndex])->text;
     }
 
-    JavaAttribute JavaProperty::searchAttributes(const std::string &name) const {
+    JavaAttribute JavaPropertyType::searchAttributes(const std::string &name) const {
         for (const JavaAttribute &attribute : attributes) {
             if (attribute->name == name) {
                 return attribute;
@@ -21,11 +21,11 @@ namespace Kophi {
         return JavaAttribute(nullptr);
     }
 
-    JavaAttributeCode* JavaProperty::getCode() const {
+    JavaAttributeCode* JavaPropertyType::getCode() const {
         return JavaAttributeCode::cast(searchAttributes("Code"));
     }
 
-    JavaProperty::JavaProperty(const JavaClass &parent, const unsigned char *data, unsigned int &index)
+    JavaPropertyType::JavaPropertyType(const JavaClass &parent, const unsigned char *data, unsigned int &index)
     : parent(parent) {
         unsigned m = 0;
         accessFlags = (AccessFlags) Private::swapEndian(*(uint16_t *) &data[m]);
